@@ -6,10 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import ru.job4j.socialmedia.model.Post;
 import ru.job4j.socialmedia.model.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,8 +36,8 @@ class PostRepositoryTest {
 
     @AfterAll
     public void clearAll() {
-        userRepository.deleteAll();
         postRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
@@ -48,6 +50,76 @@ class PostRepositoryTest {
         var foundPost = postRepository.findById(post.getId());
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get()).isEqualTo(post);
+    }
+
+    @Test
+    public void whenFindPostsByUser_thenReturnList() {
+        var user = new User();
+        user.setLogin("test1");
+        user.setPassword("test1");
+        user.setName("test1");
+        userRepository.save(user);
+        var post = new Post();
+        post.setTitle("test");
+        post.setDescription("test");
+        post.setUser(user);
+        postRepository.save(post);
+        var post1 = new Post();
+        post1.setTitle("test1");
+        post1.setDescription("test1");
+        post1.setUser(user);
+        postRepository.save(post1);
+        var post2 = new Post();
+        post2.setTitle("test2");
+        post2.setDescription("test2");
+        post2.setUser(user);
+        postRepository.save(post2);
+        var foundPosts = postRepository.findByUserId(user.getId());
+        assertThat(foundPosts).hasSize(3);
+    }
+
+    @Test
+    public void whenFindByCreatedIsGreaterThanEqualAndCreatedIsLessThanEqual_thenReturnList() {
+        var user = new User();
+        user.setLogin("test1");
+        user.setPassword("test1");
+        user.setName("test1");
+        userRepository.save(user);
+        var post = new Post();
+        post.setTitle("test");
+        post.setDescription("test");
+        post.setUser(user);
+        postRepository.save(post);
+        var post1 = new Post();
+        post1.setTitle("test1");
+        post1.setDescription("test1");
+        post1.setUser(user);
+        postRepository.save(post1);
+        LocalDateTime start = LocalDateTime.now().minusDays(1);
+        LocalDateTime end = LocalDateTime.now().plusDays(1);
+        var foundPosts = postRepository.findByCreatedIsGreaterThanEqualAndCreatedIsLessThanEqual(start, end);
+        assertThat(foundPosts).hasSize(2);
+    }
+
+    @Test
+    public void whenFindByOrderByCreatedDesc_thenReturnList() {
+        var user = new User();
+        user.setLogin("test1");
+        user.setPassword("test1");
+        user.setName("test1");
+        userRepository.save(user);
+        var post = new Post();
+        post.setTitle("test");
+        post.setDescription("test");
+        post.setUser(user);
+        postRepository.save(post);
+        var post1 = new Post();
+        post1.setTitle("test1");
+        post1.setDescription("test1");
+        post1.setUser(user);
+        postRepository.save(post1);
+        assertThat(postRepository.findByOrderByCreatedDesc(Pageable.ofSize(1))
+                .getTotalElements()).isEqualTo(2);
     }
 
     @Test
