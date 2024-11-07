@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
+import ru.job4j.socialmedia.model.File;
 import ru.job4j.socialmedia.model.Post;
+import ru.job4j.socialmedia.model.Subscribe;
 import ru.job4j.socialmedia.model.User;
 
 import java.time.LocalDateTime;
@@ -25,17 +27,25 @@ class PostRepositoryTest {
     private PostRepository postRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private SubscribeRepository subscribeRepository;
 
     private User testUser;
 
     @BeforeEach
     public void setUp() {
+        subscribeRepository.deleteAll();
+        fileRepository.deleteAll();
         postRepository.deleteAll();
         userRepository.deleteAll();
     }
 
     @AfterAll
     public void clearAll() {
+        subscribeRepository.deleteAll();
+        fileRepository.deleteAll();
         postRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -155,6 +165,109 @@ class PostRepositoryTest {
         assertThat(foundPost).isPresent();
         assertThat(foundPost.get().getId()).isEqualTo(post.getId());
     }
+
+    @Test
+    public void whenUpdateTitleAndDescription_thenReturnUpdatedTitle() {
+        var post = new Post();
+        var user = new User();
+        user.setLogin("test1");
+        user.setPassword("test1");
+        user.setName("test1");
+        userRepository.save(user);
+        post.setTitle("test1");
+        post.setDescription("test1");
+        post.setUser(user);
+        postRepository.save(post);
+        var id = post.getId();
+        postRepository.updateTitleAndDesc("test2", "desc2", id);
+        var updatedPost = postRepository.findById(id);
+        assertThat(updatedPost).isPresent();
+        assertThat(updatedPost.get().getTitle()).isEqualTo("test2");
+    }
+
+    @Test
+    public void whenDeleteFileByPost_thenReturnPost() {
+        var user = new User();
+        user.setLogin("test1");
+        user.setPassword("test1");
+        user.setName("test1");
+        userRepository.save(user);
+        var post = new Post();
+        post.setTitle("test1");
+        post.setDescription("test1");
+        post.setUser(user);
+        postRepository.save(post);
+        var file = new File();
+        file.setPost(post);
+        fileRepository.save(file);
+        var foundPost = postRepository.findById(post.getId());
+        assertThat(foundPost).isPresent();
+        assertThat(foundPost.get().getId()).isEqualTo(post.getId());
+        postRepository.deleteFileByPostId(post.getId());
+        var deletedPost = postRepository.findById(post.getId());
+        assertThat(deletedPost).isPresent();
+        assertThat(fileRepository.findById(file.getId())).isEmpty();
+
+    }
+
+    @Test
+    public void whenDeletePostById_thenReturnPost() {
+        var user = new User();
+        user.setLogin("test1");
+        user.setPassword("test1");
+        user.setName("test1");
+        userRepository.save(user);
+        var post = new Post();
+        post.setTitle("test1");
+        post.setDescription("test1");
+        post.setUser(user);
+        postRepository.save(post);
+        var foundPost = postRepository.findById(post.getId());
+        assertThat(foundPost).isPresent();
+        postRepository.deletePostById(post.getId());
+        assertThat(postRepository.findById(post.getId())).isEmpty();
+    }
+
+    @Test
+    public void whenFindAllSubscriberPostsByUserOrderByCreatedDesc_thenReturnPage() {
+        var userSubscriber = new User();
+        userSubscriber.setName("testUs");
+        userSubscriber.setLogin("testUs@test.com");
+        userSubscriber.setPassword("testUs");
+        userRepository.save(userSubscriber);
+        var userTo = new User();
+        userTo.setName("testUs");
+        userTo.setLogin("testUs1@test.com");
+        userTo.setPassword("testUs1");
+        userRepository.save(userTo);
+        var userTo1 = new User();
+        userTo1.setName("testUser");
+        userTo1.setLogin("testUser@test.com");
+        userTo1.setPassword("testUser");
+        userRepository.save(userTo1);
+        var subscriber1 = new Subscribe();
+        subscriber1.setUserTo(userTo);
+        subscriber1.setUserSubscriber(userSubscriber);
+        subscribeRepository.save(subscriber1);
+        var subscriber2 = new Subscribe();
+        subscriber2.setUserTo(userTo1);
+        subscriber2.setUserSubscriber(userSubscriber);
+        subscribeRepository.save(subscriber2);
+        var post = new Post();
+        post.setTitle("post");
+        post.setDescription("description");
+        post.setUser(userTo);
+        postRepository.save(post);
+        var post1 = new Post();
+        post1.setTitle("post1");
+        post1.setDescription("description");
+        post1.setUser(userTo1);
+        postRepository.save(post1);
+        var findAllPosts = postRepository
+                .findAllSubscriberPostsByUserOrderByCreatedDesc(userSubscriber.getId(), Pageable.ofSize(1));
+        assertThat(findAllPosts.getTotalElements()).isEqualTo(2);
+    }
+
 
     @Test
     public void whenDeletePost_thenReturnPost() {
