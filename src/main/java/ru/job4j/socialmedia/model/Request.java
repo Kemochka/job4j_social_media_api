@@ -26,4 +26,5 @@ public class Request {
     @ManyToOne
     @JoinColumn(name = "user_to_id")
     private User userTo;
+    private boolean accept;
 }
