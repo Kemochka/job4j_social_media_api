@@ -31,6 +31,10 @@ public interface PostService {
 
     boolean updatePostByUser(User user, Post post);
 
+    boolean update(Post post);
+
+    boolean updateFormDto(PostDto postDto);
+
     boolean deleteById(Long postId);
 
     boolean deletePostByUser(User user, Post post);

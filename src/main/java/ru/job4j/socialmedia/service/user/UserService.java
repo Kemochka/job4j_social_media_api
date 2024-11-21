@@ -14,7 +14,9 @@ public interface UserService {
 
     List<User> findAll();
 
-    void deleteById(Long userId);
+    boolean deleteById(Long userId);
+
+    boolean update(User user);
 
     List<User> findAllSubscribersById(Long userId);
 

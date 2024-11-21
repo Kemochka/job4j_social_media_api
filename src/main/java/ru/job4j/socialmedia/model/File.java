@@ -22,4 +22,9 @@ public class File {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
+    public File(String name, String path) {
+        this.name = name;
+        this.path = path;
+    }
 }

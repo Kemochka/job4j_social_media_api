@@ -10,4 +10,10 @@ import lombok.NoArgsConstructor;
 public class FileDto {
     private String name;
     private byte[] content;
+    private String path;
+
+    public FileDto(String name, byte[] content) {
+        this.name = name;
+        this.content = content;
+    }
 }

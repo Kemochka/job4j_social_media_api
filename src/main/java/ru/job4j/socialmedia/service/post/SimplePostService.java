@@ -35,6 +35,7 @@ public class SimplePostService implements PostService {
     public Post create(PostDto postDto) {
         var newPost = postMapper.getEntityFromDto(postDto);
         postRepository.save(newPost);
+        System.out.println("Post saved with ID: " + newPost.getId());
         var fileList = fileMapper.getFileListFromDtoList(postDto);
         fileList.forEach(file -> file.setPost(newPost));
         fileRepository.saveAll(fileList);
@@ -88,7 +89,19 @@ public class SimplePostService implements PostService {
     }
 
     @Override
+    public boolean update(Post post) {
+        return postRepository.updateTitleAndDesc(post.getTitle(), post.getDescription(), post.getId()) > 0L;
+    }
+
+    @Override
+    public boolean updateFormDto(PostDto postDto) {
+        var newPost = postMapper.getEntityFromDto(postDto);
+        return postRepository.updateTitleAndDesc(newPost.getTitle(), newPost.getDescription(), newPost.getId()) > 0L;
+    }
+
+    @Override
     public boolean deleteById(Long postId) {
+        postRepository.deleteFileByPostId(postId);
         return postRepository.deletePostById(postId) > 0;
     }
 
