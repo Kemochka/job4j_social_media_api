@@ -14,4 +14,5 @@
     <include file="../scripts/007_ddl_create_events_table.sql" relativeToChangelogFile="true"/>
     <include file="../scripts/008_ddl_create_requests_table.sql" relativeToChangelogFile="true"/>
     <include file="../scripts/009_ddl_alter_table_requests_add_column_accept.sql" relativeToChangelogFile="true"/>
+    <include file="../scripts/010_ddl_alter_table_users_delete_unique_name.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
