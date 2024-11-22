@@ -35,10 +35,10 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<Void> update(@RequestBody User user) {
-        if (userService.update(user)) {
-            return ResponseEntity.ok().build();
+        if (!userService.update(user)) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping
@@ -49,9 +49,9 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> removeById(@PathVariable long userId) {
-        if (userService.deleteById(userId)) {
-            return ResponseEntity.noContent().build();
+        if (!userService.deleteById(userId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.noContent().build();
     }
 }
