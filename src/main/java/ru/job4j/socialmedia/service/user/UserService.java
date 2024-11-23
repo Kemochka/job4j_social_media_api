@@ -1,5 +1,6 @@
 package ru.job4j.socialmedia.service.user;
 
+import ru.job4j.socialmedia.dto.UserDto;
 import ru.job4j.socialmedia.model.User;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface UserService {
     Optional<User> findByLoginAndPassword(String login, String password);
 
     List<User> findAll();
+
+    List<UserDto> findUsersWithPostsList(List<Long> useIds);
 
     boolean deleteById(Long userId);
 
