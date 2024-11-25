@@ -1,13 +1,18 @@
 package ru.job4j.socialmedia.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.job4j.socialmedia.model.User;
 import ru.job4j.socialmedia.service.user.UserService;
 
+@Validated
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/user")
@@ -15,7 +20,10 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> get(@PathVariable("userId") Long userId) {
+    public ResponseEntity<User> get(@PathVariable("userId")
+                                    @NotNull
+                                    @Min(value = 1, message = "значение не может быть меньше 1")
+                                    Long userId) {
         return userService.findById(userId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> (ResponseEntity.notFound().build()));
@@ -23,7 +31,7 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody User user) {
+    public ResponseEntity<User> save(@Valid @RequestBody User user) {
         userService.save(user);
         var uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -34,7 +42,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody User user) {
+    public ResponseEntity<Void> update(@Valid @RequestBody User user) {
         if (!userService.update(user)) {
             return ResponseEntity.notFound().build();
         }
@@ -43,7 +51,7 @@ public class UserController {
 
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
-    public void change(@RequestBody User user) {
+    public void change(@Valid @RequestBody User user) {
         userService.update(user);
     }
 

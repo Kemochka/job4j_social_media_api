@@ -1,5 +1,7 @@
 package ru.job4j.socialmedia.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,9 @@ import java.util.List;
 @NoArgsConstructor
 public class PostDto {
     private Long id;
+    @NotEmpty(message = "заголовок не может быть пустым")
     private String title;
+    @Size(max = 255, message = "описание превышает допустимый размер текста 255 символов")
     private String description;
     private LocalDateTime created;
     private User user;

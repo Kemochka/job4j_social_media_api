@@ -52,7 +52,7 @@ class UserRepositoryTest {
         var user = new User();
         user.setName("testUs");
         user.setLogin("testUs@test.com");
-        user.setPassword("testUs");
+        user.setPassword("testUser");
         userRepository.save(user);
         var foundUser = userRepository.findById(user.getId());
         assertThat(foundUser).isPresent();
@@ -64,12 +64,12 @@ class UserRepositoryTest {
         var user1 = new User();
         user1.setName("testUs");
         user1.setLogin("testUs@test.com");
-        user1.setPassword("testUs");
+        user1.setPassword("testUser");
         userRepository.save(user1);
         var user2 = new User();
         user2.setName("testUs1");
         user2.setLogin("testUs1@test.com");
-        user2.setPassword("testUs1");
+        user2.setPassword("testUser1");
         userRepository.save(user2);
         userRepository.findAll();
         var foundUsers = userRepository.findAll();
@@ -81,14 +81,14 @@ class UserRepositoryTest {
         var user1 = new User();
         user1.setName("testUs");
         user1.setLogin("testUs@test.com");
-        user1.setPassword("testUs");
+        user1.setPassword("testUser");
         userRepository.save(user1);
         var user2 = new User();
         user2.setName("testUs1");
         user2.setLogin("testUs1@test.com");
-        user2.setPassword("testUs1");
+        user2.setPassword("testUser1");
         userRepository.save(user2);
-        var foundUser = userRepository.findByLoginAndPassword("testUs@test.com", "testUs");
+        var foundUser = userRepository.findByLoginAndPassword("testUs@test.com", "testUser");
         assertThat(foundUser).isPresent();
         assertThat(foundUser.get()).isEqualTo(user1);
     }
@@ -98,12 +98,12 @@ class UserRepositoryTest {
         var userSubscriber = new User();
         userSubscriber.setName("testUs");
         userSubscriber.setLogin("testUs@test.com");
-        userSubscriber.setPassword("testUs");
+        userSubscriber.setPassword("testUser");
         userRepository.save(userSubscriber);
         var userTo = new User();
         userTo.setName("testUs");
         userTo.setLogin("testUs1@test.com");
-        userTo.setPassword("testUs1");
+        userTo.setPassword("testUser1");
         userRepository.save(userTo);
         var subscriber = new Subscribe();
         subscriber.setUserTo(userTo);
@@ -150,7 +150,7 @@ class UserRepositoryTest {
         var user = new User();
         user.setName("testUs");
         user.setLogin("testUs@test.com");
-        user.setPassword("testUs");
+        user.setPassword("testUser");
         userRepository.save(user);
         var foundUser = userRepository.findById(user.getId());
         assertThat(foundUser).isPresent();
@@ -162,7 +162,7 @@ class UserRepositoryTest {
         var user = new User();
         user.setName("testUs");
         user.setLogin("testUs@test.com");
-        user.setPassword("testUs");
+        user.setPassword("testUser");
         userRepository.save(user);
         var foundUser = userRepository.findById(user.getId());
         assertThat(foundUser).isPresent();

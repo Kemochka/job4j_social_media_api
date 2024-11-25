@@ -65,8 +65,8 @@ class PostRepositoryTest {
     @Test
     public void whenFindPostsByUser_thenReturnList() {
         var user = new User();
-        user.setLogin("test1");
-        user.setPassword("test1");
+        user.setLogin("testUs@test.com");
+        user.setPassword("test11111");
         user.setName("test1");
         userRepository.save(user);
         var post = new Post();
@@ -91,8 +91,8 @@ class PostRepositoryTest {
     @Test
     public void whenFindByCreatedIsGreaterThanEqualAndCreatedIsLessThanEqual_thenReturnList() {
         var user = new User();
-        user.setLogin("test1");
-        user.setPassword("test1");
+        user.setLogin("testUs@test.com");
+        user.setPassword("test1111");
         user.setName("test1");
         userRepository.save(user);
         var post = new Post();
@@ -114,8 +114,8 @@ class PostRepositoryTest {
     @Test
     public void whenFindByOrderByCreatedDesc_thenReturnList() {
         var user = new User();
-        user.setLogin("test1");
-        user.setPassword("test1");
+        user.setLogin("testUs@test.com");
+        user.setPassword("test1111");
         user.setName("test1");
         userRepository.save(user);
         var post = new Post();
@@ -170,8 +170,8 @@ class PostRepositoryTest {
     public void whenUpdateTitleAndDescription_thenReturnUpdatedTitle() {
         var post = new Post();
         var user = new User();
-        user.setLogin("test1");
-        user.setPassword("test1");
+        user.setLogin("testUs@test.com");
+        user.setPassword("test1111");
         user.setName("test1");
         userRepository.save(user);
         post.setTitle("test1");
@@ -188,8 +188,8 @@ class PostRepositoryTest {
     @Test
     public void whenDeleteFileByPost_thenReturnPost() {
         var user = new User();
-        user.setLogin("test1");
-        user.setPassword("test1");
+        user.setLogin("testUs@test.com");
+        user.setPassword("test1111");
         user.setName("test1");
         userRepository.save(user);
         var post = new Post();
@@ -213,8 +213,8 @@ class PostRepositoryTest {
     @Test
     public void whenDeletePostById_thenReturnPost() {
         var user = new User();
-        user.setLogin("test1");
-        user.setPassword("test1");
+        user.setLogin("testUs@test.com");
+        user.setPassword("test1111");
         user.setName("test1");
         userRepository.save(user);
         var post = new Post();
@@ -233,17 +233,17 @@ class PostRepositoryTest {
         var userSubscriber = new User();
         userSubscriber.setName("testUs");
         userSubscriber.setLogin("testUs@test.com");
-        userSubscriber.setPassword("testUs");
+        userSubscriber.setPassword("testUser");
         userRepository.save(userSubscriber);
         var userTo = new User();
         userTo.setName("testUs");
         userTo.setLogin("testUs1@test.com");
-        userTo.setPassword("testUs1");
+        userTo.setPassword("testUser1");
         userRepository.save(userTo);
         var userTo1 = new User();
         userTo1.setName("testUser");
         userTo1.setLogin("testUser@test.com");
-        userTo1.setPassword("testUser");
+        userTo1.setPassword("testUser2");
         userRepository.save(userTo1);
         var subscriber1 = new Subscribe();
         subscriber1.setUserTo(userTo);
