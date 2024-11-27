@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.socialmedia.dto.UserDto;
 import ru.job4j.socialmedia.mapper.UserMapper;
+import ru.job4j.socialmedia.model.Post;
 import ru.job4j.socialmedia.model.User;
 import ru.job4j.socialmedia.repository.UserRepository;
+import ru.job4j.socialmedia.service.post.PostService;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +16,7 @@ import java.util.Optional;
 public class SimpleUserService implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PostService postService;
 
     @Override
     public User save(User user) {
@@ -47,6 +50,11 @@ public class SimpleUserService implements UserService {
 
     @Override
     public boolean deleteById(Long userId) {
+        User user = userRepository.findById(userId).get();
+        List<Post> posts = postService.findByUserId(userId);
+        for (Post post : posts) {
+            postService.deletePostByUser(user, post);
+        }
         return userRepository.delete(userId) > 0L;
     }
 
