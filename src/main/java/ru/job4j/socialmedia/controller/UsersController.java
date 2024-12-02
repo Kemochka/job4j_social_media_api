@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.socialmedia.dto.UserDto;
 import ru.job4j.socialmedia.model.User;
@@ -34,6 +35,7 @@ public class UsersController {
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     public List<User> getAll() {
         return userService.findAll();
     }
@@ -48,6 +50,7 @@ public class UsersController {
             @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema())})
     })
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<List<UserDto>> getUsersWithPosts(@PathVariable List<Long> userId) {
         var usersWithPosts = userService.findUsersWithPostsList(userId);
         if (usersWithPosts.isEmpty()) {

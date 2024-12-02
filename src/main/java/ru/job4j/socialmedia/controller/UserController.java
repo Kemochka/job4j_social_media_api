@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,6 +36,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema())})
     })
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<User> get(@PathVariable("userId")
                                     @NotNull
                                     @Min(value = 1, message = "значение не может быть меньше 1")
@@ -54,6 +56,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema())})
     })
     @PostMapping
+    @PreAuthorize("#user.email==authentication.principal.email")
     public ResponseEntity<User> save(@Valid @RequestBody User user) {
         userService.save(user);
         var uri = ServletUriComponentsBuilder
@@ -74,6 +77,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema())})
     })
     @PutMapping
+    @PreAuthorize("#user.email==authentication.principal.email")
     public ResponseEntity<Void> update(@Valid @RequestBody User user) {
         if (!userService.update(user)) {
             return ResponseEntity.notFound().build();
@@ -92,6 +96,7 @@ public class UserController {
     })
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("#user.email==authentication.principal.email")
     public void change(@Valid @RequestBody User user) {
         userService.update(user);
     }
@@ -106,6 +111,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema())})
     })
     @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<Void> removeById(@PathVariable long userId) {
         if (!userService.deleteById(userId)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

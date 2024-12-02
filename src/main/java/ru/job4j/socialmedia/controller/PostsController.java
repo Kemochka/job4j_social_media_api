@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.socialmedia.model.Post;
@@ -38,6 +39,7 @@ public class PostsController {
     })
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("isAuthenticated()")
     List<Post> findAll() {
         return postService.findAll();
     }
@@ -52,6 +54,7 @@ public class PostsController {
             @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema())})
     })
     @GetMapping("/{userId}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<List<Post>> findPostsByUserId(@PathVariable()
                                                         @NotNull
                                                         @Min(value = 1, message = "значение не может быть меньше 1")

@@ -28,16 +28,22 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Modifying
     @Query("""
-update User u
-        set u.login = :#{#user.login},
-        u.password = :#{#user.password},
-        u.name = :#{#user.name}
-        where u.id=:#{#user.id}
-""")
+            update User u
+                    set u.login = :#{#user.login},
+                    u.password = :#{#user.password},
+                    u.name = :#{#user.name}
+                    where u.id=:#{#user.id}
+            """)
     int update(@Param("user") User user);
 
     @Transactional
     @Modifying
     @Query("delete from User u where u.id=:id")
     int delete(@Param("id") Long id);
+
+    Optional<User> findByName(String name);
+
+    Boolean existsByName(String name);
+
+    Boolean existsByLogin(String login);
 }

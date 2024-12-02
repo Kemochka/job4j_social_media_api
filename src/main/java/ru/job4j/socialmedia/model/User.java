@@ -9,6 +9,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import ru.job4j.socialmedia.security.models.Role;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -33,4 +37,14 @@ public class User {
     @Length(min = 4, max = 15, message = "имя должно быть не менее 4 и не более 15 символов")
     @Schema(description = "User name", example = "Mediator")
     private String name;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
+    public User(String name, String login, String password) {
+        this.name = name;
+        this.login = login;
+        this.password = password;
+    }
 }
